@@ -1,0 +1,28 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "File manager app powered using nodejs api",
+  "main": "main.js",
+  "scripts": {
+    "test": "test",
+    "start": "node main.js",
+    "dev": "nodemon main.js -- --username=Maksim"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaksimGurbanow/file-manager.git"
+  },
+  "keywords": [
+    "file",
+    "manager"
+  ],
+  "author": "Maksim Gurbanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaksimGurbanow/file-manager/issues"
+  },
+  "homepage": "https://github.com/MaksimGurbanow/file-manager#readme",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
