@@ -1,11 +1,10 @@
-const path = require('path');
-const { stdout, stderr } = require('process');
-const { createReadStream } = require('fs');
-const crypto = require('crypto');
+import { stdout, stderr } from 'process';
+import { createReadStream } from 'fs';
+import { createHash } from 'crypto';
 
 const calculateHash = async (src) => {
     const readableStream = createReadStream(src);
-    const hash = crypto.createHash('sha256');
+    const hash = createHash('sha256');
 
     readableStream.on('data', (data) => {
         hash.update(data);
@@ -18,4 +17,4 @@ const calculateHash = async (src) => {
     readableStream.on('error', (err) => stderr.write(err + '\n'));
 };
 
-module.exports = calculateHash;
+export default calculateHash;

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "File manager app powered using nodejs api",
   "main": "main.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "test",
     "start": "node main.js",

@@ -1,7 +1,6 @@
-const { createReadStream, createWriteStream, unlink } = require('fs');
-const path = require('path');
-const { stderr } = require('process');
-const { createGzip, createUnzip } = require('zlib');
+import { createReadStream, createWriteStream, unlink } from 'fs';
+import { stderr } from 'process';
+import { createGzip, createUnzip } from 'zlib';
 
 const compress = async (src, dest) => {
     const readableStream = createReadStream(src);
@@ -35,7 +34,7 @@ const decompress = async (src, dest) => {
     });
 };
 
-module.exports = {
+export {
     compress,
     decompress,
 }

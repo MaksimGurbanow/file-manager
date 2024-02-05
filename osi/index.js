@@ -1,12 +1,12 @@
-const os = require('os');
-const { stdout } = require('process');
+import { EOL, cpus as _cpus, homedir, userInfo, arch as _arch } from 'os';
+import { stdout } from 'process';
 
 const eol = () => {
-    return JSON.stringify(os.EOL);
+    return JSON.stringify(EOL);
 }
 
 const cpus = () => {
-    const cpus = os.cpus();
+    const cpus = _cpus();
     stdout.write('CPU Information:\n');
     cpus.forEach((cpu, index) => {
         stdout.write(`CPU ${index + 1}: ${cpu.model} @ ${cpu.speed / 1000} GHz\n`);
@@ -14,18 +14,18 @@ const cpus = () => {
 }
 
 const homeDir = () => {
-    return os.homedir();
+    return homedir();
 }
 
 const sysUsername = () => {
-    return os.userInfo().username;
+    return userInfo().username;
 }
 
 const arch = () => {
-    return os.arch();
+    return _arch();
 };
 
-module.exports = {
+export {
     arch,
     cpus,
     eol,

@@ -1,4 +1,4 @@
-const formatTable = (data) => {
+const formatTable = async (data) => {
     const header = 'Index\t\tName\t\tType\n------------------------------' + 
     '---------------------------------------------\n';
     const rows = data
@@ -8,6 +8,6 @@ const formatTable = (data) => {
     return `${header}${rows}`;
 };
 
-module.exports = {
-    formatTable
-};
+
+
+export { formatTable };
