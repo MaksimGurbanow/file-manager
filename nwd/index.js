@@ -1,5 +1,5 @@
 const { createReadStream, createWriteStream } = require("fs");
-const { readdir, stat } = require("fs/promises");
+const { readdir, stat, access } = require("fs/promises");
 const path = require("path");
 const { stderr, stdout } = require("process");
 
@@ -55,21 +55,31 @@ const cat = (path) => {
     });
 }
 
-const add = (fileName) => {
+const add = async (fileName) => {
     const filePath = `./${fileName}`;
-    const writeStream = createWriteStream(filePath);
 
-    writeStream.end();
+    try {
+        await access(filePath);
+        stderr.write('Operation Failed: File already exists\n');
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            const writeStream = createWriteStream(filePath);
 
+            writeStream.end();
 
-    writeStream.on('finish', () => {
-        stdout.write(`File "${fileName}" created successfully.`);
-    });
+            writeStream.on('finish', () => {
+                stdout.write(`File "${fileName}" created successfully.\n`);
+            });
 
-    writeStream.on('error', (err) => {
-        stderr.write(`Error creating file: ${err.message}`);
-    });
-}
+            writeStream.on('error', (err) => {
+                stderr.write(`Error creating file: ${err.message}\n`);
+            });
+        } else {
+            stderr.write('Operation Failed\n');
+            stderr.write(error.message);
+        }
+    }
+};
 
 module.exports = {
     up,
