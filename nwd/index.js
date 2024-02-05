@@ -1,5 +1,5 @@
 const { createReadStream, createWriteStream } = require("fs");
-const { readdir, stat, access } = require("fs/promises");
+const { readdir, stat, access, rename, unlink } = require("fs/promises");
 const path = require("path");
 const { stderr, stdout } = require("process");
 
@@ -76,10 +76,71 @@ const add = async (fileName) => {
             });
         } else {
             stderr.write('Operation Failed\n');
-            stderr.write(error.message);
+            stderr.write(error.message + '\n');
         }
     }
 };
+
+const rn = async (path, newName) => {
+    try {
+        await access(path);
+
+        const newPath = `./${newName}`;
+        await rename(path, newPath);
+
+        stdout.write(`File renamed from "${path}" to "${newPath}" successfully.\n`);
+    } catch (error) {
+        stderr.write('Operation Failed\n');
+        stderr.write(error.message + '\n');
+    }
+};
+
+const cp = async (from, to) => {
+    try {
+        await access(from);
+
+        const readStream = createReadStream(from);
+        const writeStream = createWriteStream(to);
+
+        readStream.pipe(writeStream);
+
+        writeStream.on('finish', () => {
+            stdout.write(`File copied successfully from ${from} to ${to}\n`);
+        });
+
+        writeStream.on('error', (error) => {
+            stderr.write('Operation Failed\n');
+            stderr.write(`${error.message}\n`);
+        });
+    } catch (error) {
+        stderr.write('Operation Failed\n');
+        stderr.write(error.message + '\n');
+    }
+}
+
+const rm = async(path) => {
+    try {
+        await access(path);
+        
+        await unlink(path);
+        stdout.write(`File "${path}" deleted successfully.\n`);
+    } catch (error) {
+        stderr.write('Operation Failed\n');
+        stderr.write(error.message + '\n');
+    }
+}
+
+const mv = async(from, to) => {
+    try {
+        await access(from);
+
+        await cp(from, to);
+        await rm(from);
+    } catch (error) {
+        stderr.write('Operation Failed\n');
+        stderr.write(error.message + '\n');
+    }
+}
 
 module.exports = {
     up,
@@ -87,5 +148,9 @@ module.exports = {
     ls,
     cat,
     add,
+    rn,
+    cp,
+    rm,
+    mv,
 
 }

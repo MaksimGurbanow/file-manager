@@ -1,8 +1,9 @@
 const os = require('os');
 const path = require('path');
 const { stderr, stdin, stdout, cwd } = require('process');
-const { up, cd, ls, cat, add } = require('./nwd');
+const { up, cd, ls, cat, add, rn, cp, rm, mv } = require('./nwd');
 const { formatTable } = require('./utils');
+const { eol, cpus, homeDir, sysUsername, arch } = require('./osi');
 
 const username = process.argv[2].slice(process.argv[2].indexOf('=') + 1);
 
@@ -11,7 +12,7 @@ stdout.write(`You are currently in ${cwd()}\n`);
 
 stdin.on('data', async (data) => {
     const formatedData = data.toString().trim();
-    const [command, arg] = formatedData.split(' ');
+    const [command, ...arg] = formatedData.split(' ');
 
     switch (command) {
         case '.exit':
@@ -28,10 +29,44 @@ stdin.on('data', async (data) => {
             stdout.write(`${formatTable(lsResult)}\n`);
             break;
         case 'cat':
-            cat(arg)
+            await cat(arg.join(' '));
             break;
         case 'add':
-            add(arg)
+            await add(arg.join(' '));
+            break;
+        case 'rn':
+            await rn(arg[0], arg[1]);
+            break;
+        case 'cp':
+            await cp(arg[0], arg[1]);
+            break;
+        case 'rm':
+            await rm(arg[0]);
+            break;
+        case 'mv':
+            await mv(arg[0], arg[1]);
+            break;
+        case 'os':
+            switch (arg[0]) {
+                case '--EOL':
+                    stdout.write(eol() + '\n');
+                    break;
+                case '--cpus':
+                    stdout.write(cpus() + '\n');
+                    break;
+                case '--homedir':
+                    stdout.write(homeDir() + '\n');
+                    break;
+                case '--username':
+                    stdout.write(sysUsername() + '\n');
+                    break;
+                case '--architecture':
+                    stdout.write(arch() + '\n')
+                    break;
+                default:
+                    stderr.write('Invalid input\n');
+                    break;
+            }
             break;
         default:
             stderr.write('Invalid input\n');
