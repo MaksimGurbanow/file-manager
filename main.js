@@ -4,6 +4,8 @@ const { stderr, stdin, stdout, cwd } = require('process');
 const { up, cd, ls, cat, add, rn, cp, rm, mv } = require('./nwd');
 const { formatTable } = require('./utils');
 const { eol, cpus, homeDir, sysUsername, arch } = require('./osi');
+const calculateHash = require('./calcHash');
+const { compress, decompress } = require('./zip');
 
 const username = process.argv[2].slice(process.argv[2].indexOf('=') + 1);
 
@@ -67,6 +69,15 @@ stdin.on('data', async (data) => {
                     stderr.write('Invalid input\n');
                     break;
             }
+            break;
+        case 'hash':
+            calculateHash(arg[0])
+            break;
+        case 'compress':
+            await compress(arg[0], arg[1]);
+            break;
+        case 'decompress':
+            await decompress(arg[0], arg[1]);
             break;
         default:
             stderr.write('Invalid input\n');
